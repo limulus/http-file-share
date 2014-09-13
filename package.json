@@ -29,5 +29,8 @@
     "node-mocks-http": "^1.0.4",
     "portfinder": "^0.2.1",
     "temp": "^0.8.1"
+  },
+  "dependencies": {
+    "rimraf": "^2.2.8"
   }
 }
