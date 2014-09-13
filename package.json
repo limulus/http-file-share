@@ -4,7 +4,7 @@
   "description": "Read and write files under a directory over HTTP",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha test"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,8 @@
   "homepage": "https://github.com/limulus/http-file-share",
   "devDependencies": {
     "mocha": "^1.21.4",
-    "portfinder": "^0.2.1"
+    "ncp": "^0.6.0",
+    "portfinder": "^0.2.1",
+    "temp": "^0.8.1"
   }
 }
