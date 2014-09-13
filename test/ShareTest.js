@@ -60,6 +60,11 @@ describe("Share", function () {
     var get = function (url) { return createRequest("GET", url) }
     var del = function (url) { return createRequest("DELETE", url) }
 
+    var handleRequestTest = function (request, responseEndHandler) {
+      response.on("end", responseEndHandler)
+      share.handleRequest(request, response)
+    }
+
     beforeEach(function () {
       response = httpMocks.createResponse({
         "eventEmitter": EventEmitter
@@ -67,73 +72,49 @@ describe("Share", function () {
     })
 
     it("should respond with a 501 for an unsupported request method", function (done) {
-      var request = createRequest("TRACE", "/blarggg")
-
-      response.on("end", function () {
+      handleRequestTest(createRequest("TRACE", "/blarggg"), function () {
         assert.strictEqual(response.statusCode, 501)
         return done()
       })
-
-      share.handleRequest(request, response)
     })
 
     it("should respond with a 404 for a nonexistent file", function (done) {
-      var request = get("/does-not-exist.txt")
-
-      response.on("end", function () {
+      handleRequestTest(get("/does-not-exist.txt"), function () {
         assert.strictEqual(response.statusCode, 404)
         return done()
       })
-
-      share.handleRequest(request, response)
     })
 
     it("should respond with a 200 for a file that exists", function (done) {
-      var request = get("/a.json")
-
-      response.on("end", function () {
+      handleRequestTest(get("/a.json"), function () {
         assert.strictEqual(response.statusCode, 200)
         return done()
       })
-
-      share.handleRequest(request, response)
     })
 
     it("should respond with the contents of the requested file", function (done) {
-      var request = get("/a.json")
-
-      response.on("end", function () {
+      handleRequestTest(get("/a.json"), function () {
         var fileContent = fs.readFileSync(tempDirPath + "/a.json")
         assert.ok(JSON.parse(fileContent))
         assert.ok(JSON.parse(response._getData()))
         assert.strictEqual(response._getData().toString(), fileContent.toString())
         return done()
       })
-
-      share.handleRequest(request, response)
     })
 
     it("should respond with a 204 when a file is successfully deleted" , function (done) {
-      var request = del("/a.json")
-
-      response.on("end", function () {
+      handleRequestTest(del("/a.json"), function () {
         assert.strictEqual(response.statusCode, 204)
         assert.ok(! fs.existsSync(tempDirPath + "/a.json"))
         return done()
       })
-
-      share.handleRequest(request, response)
     })
 
     it("should respond with a 404 when a file is deleted but does not exist", function (done) {
-      var request = del("/nonexistent.txt")
-
-      response.on("end", function () {
+      handleRequestTest(del("/nonexistent.txt"), function () {
         assert.strictEqual(response.statusCode, 404)
         return done()
       })
-
-      share.handleRequest(request, response)
     })
   })
 })
