@@ -1,0 +1,30 @@
+{
+  "name": "http-file-share",
+  "version": "1.0.0",
+  "description": "Read and write files under a directory over HTTP",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/limulus/http-file-share.git"
+  },
+  "keywords": [
+    "http",
+    "file",
+    "share",
+    "get",
+    "put"
+  ],
+  "author": "Eric McCarthy <eric@limulus.net> (http://www.limulus.net/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/limulus/http-file-share/issues"
+  },
+  "homepage": "https://github.com/limulus/http-file-share",
+  "devDependencies": {
+    "mocha": "^1.21.4",
+    "portfinder": "^0.2.1"
+  }
+}
