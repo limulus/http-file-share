@@ -124,5 +124,16 @@ describe("Share", function () {
 
       share.handleRequest(request, response)
     })
+
+    it("should respond with a 404 when a file is deleted but does not exist", function (done) {
+      var request = del("/nonexistent.txt")
+
+      response.on("end", function () {
+        assert.strictEqual(response.statusCode, 404)
+        return done()
+      })
+
+      share.handleRequest(request, response)
+    })
   })
 })
