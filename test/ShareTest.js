@@ -50,15 +50,22 @@ describe("Share", function () {
   describe(".prototype.handleRequest", function () {
     var response
 
-    var createRequest = function (method, url) {
-      return httpMocks.createRequest({
+    var createRequest = function (method, url, body) {
+      var request = httpMocks.createRequest({
         "method": method,
         "url": url
       })
+
+      if (body) {
+        request.body = body
+      }
+
+      return extendMockRequest(request)
     }
 
     var get = function (url) { return createRequest("GET", url) }
     var del = function (url) { return createRequest("DELETE", url) }
+    var put = function (url, body) { return createRequest("PUT", url, body) }
 
     var handleRequestTest = function (request, responseEndHandler) {
       response.on("end", responseEndHandler)
@@ -116,5 +123,28 @@ describe("Share", function () {
         return done()
       })
     })
+
+    it("should respond with a 204 when a file is PUT and data should be written", function (done) {
+      handleRequestTest(put("/new-file.txt", "foo\n"), function () {
+        assert.strictEqual(response.statusCode, 204)
+        assert.ok(fs.existsSync(tempDirPath + "/new-file.txt"))
+        assert.strictEqual(fs.readFileSync(tempDirPath + "/new-file.txt").toString(), "foo\n")
+        return done()
+      })
+    })
   })
 })
+
+function extendMockRequest (request) {
+  // node-mocks-http doesn't give us a pipe method on IncomingMessage mock
+  request.pipe = request.pipe || function (dest) {
+    process.nextTick(function () {
+      dest.write(new Buffer(request.body))
+      process.nextTick(function () {
+        dest.end()
+      })
+    })
+  }
+
+  return request
+}
