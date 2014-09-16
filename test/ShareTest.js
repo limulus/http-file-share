@@ -138,7 +138,7 @@ describe("Share", function () {
     })
 
     it("should respond with the right file when a base route has been specified", function (done) {
-      share.setBaseRoute("/foo/bar")
+      share.setBaseRoute(/^\/foo\/bar/)
       handleRequestTest(get("/foo/bar/a.json"), function () {
         assert.strictEqual(response.statusCode, 200)
         assertResponseContainsJSONFileContent(response, "a.json")
@@ -169,6 +169,14 @@ describe("Share", function () {
       assert.ok(JSON.parse(response._getData()))
       assert.strictEqual(response._getData().toString(), fileContent.toString())
     }
+  })
+
+  describe(".prototype.setBaseRoute", function () {
+    it("should throw an error if argument is not of type RegExp", function () {
+      assert.throws(function () {
+        share.setBaseRoute("/foo/bar")
+      })
+    })
   })
 })
 
