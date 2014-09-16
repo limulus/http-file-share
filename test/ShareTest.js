@@ -155,6 +155,14 @@ describe("Share", function () {
       })
     })
 
+    it("should be able to inject our own content-type mapping function", function (done) {
+      share.setContentTypeMappingFunction(function () { return "foo/bar" })
+      handleRequestTest(get("/a.json"), function () {
+        assert.strictEqual(response.getHeader("content-type"), "foo/bar")
+        return done()
+      })
+    })
+
     function assertResponseContainsJSONFileContent (response, file) {
       var fileContent = fs.readFileSync(tempDirPath + "/" + file)
       assert.ok(JSON.parse(fileContent))
