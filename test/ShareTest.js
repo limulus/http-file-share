@@ -101,10 +101,7 @@ describe("Share", function () {
 
     it("should respond with the contents of the requested file", function (done) {
       handleRequestTest(get("/a.json"), function () {
-        var fileContent = fs.readFileSync(tempDirPath + "/a.json")
-        assert.ok(JSON.parse(fileContent))
-        assert.ok(JSON.parse(response._getData()))
-        assert.strictEqual(response._getData().toString(), fileContent.toString())
+        assertResponseContainsJSONFileContent(response, "a.json")
         return done()
       })
     })
@@ -132,6 +129,31 @@ describe("Share", function () {
         return done()
       })
     })
+
+    it("should respond with the right file when a base route has been specified", function (done) {
+      share.setBaseRoute("/foo/bar")
+      handleRequestTest(get("/foo/bar/a.json"), function () {
+        assert.strictEqual(response.statusCode, 200)
+        assertResponseContainsJSONFileContent(response, "a.json")
+        return done()
+      })
+    })
+
+    it("should not attempt to read files outside of the base directory", function (done) {
+      share.setBasePath(tempDirPath + "/1/")
+      handleRequestTest(get("/../a.json"), function () {
+        assert.strictEqual(response.statusCode, 403)
+        assert.strictEqual(response._getData(), "")
+        return done()
+      })
+    })
+
+    function assertResponseContainsJSONFileContent (response, file) {
+      var fileContent = fs.readFileSync(tempDirPath + "/" + file)
+      assert.ok(JSON.parse(fileContent))
+      assert.ok(JSON.parse(response._getData()))
+      assert.strictEqual(response._getData().toString(), fileContent.toString())
+    }
   })
 })
 
