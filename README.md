@@ -1,4 +1,4 @@
-# http-file-share
+# http-file-share   [![Build Status](https://travis-ci.org/limulus/http-file-share.svg?branch=master)](https://travis-ci.org/limulus/http-file-share)
 
 Read and write files under a directory over HTTP
 
