@@ -32,6 +32,7 @@
     "temp": "^0.8.1"
   },
   "dependencies": {
+    "mime": "^1.2.11",
     "rimraf": "^2.2.8",
     "subdir": "0.0.3"
   }

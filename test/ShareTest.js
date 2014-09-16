@@ -99,6 +99,13 @@ describe("Share", function () {
       })
     })
 
+    it("should respond with the correct Content-type header", function (done) {
+      handleRequestTest(get("/a.json"), function () {
+        assert.strictEqual(response.getHeader("content-type"), "application/json")
+        return done()
+      })
+    })
+
     it("should respond with the contents of the requested file", function (done) {
       handleRequestTest(get("/a.json"), function () {
         assertResponseContainsJSONFileContent(response, "a.json")

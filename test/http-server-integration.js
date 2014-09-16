@@ -36,6 +36,7 @@ describe("http-server-integration", function () {
     request("http://127.0.0.1:"+port+"/1/b.json", function (err, res, body) {
       assert.ifError(err)
       assert.strictEqual(res.statusCode, 200)
+      assert.strictEqual(res.headers["content-type"], "application/json")
       assert.strictEqual(body, fileContent)
       return done()
     })
