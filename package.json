@@ -4,7 +4,7 @@
   "description": "Read and write files under a directory over HTTP",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
